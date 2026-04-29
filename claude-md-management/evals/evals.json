@@ -4,20 +4,74 @@
     {
       "id": 1,
       "prompt": "为这个仓库创建 CLAUDE.md。保持简洁；如果需要详细说明，请创建 `.claude/rules/` 规则文件，不要把所有内容都塞进根文件。",
-      "expected_output": "生成简洁的根 CLAUDE.md，包含仓库级指导；如有必要，同时创建 `.claude/rules/` 规则文件，确保内容准确且不编造命令。",
-      "files": []
+      "expected_output": "生成简洁的根 CLAUDE.md，包含仓库级指导；如有必要，同时创建 `.claude/rules/` 规则文件，确保内容准确且不编造命令。必须先阅读 package.json 或已有文档确认命令。",
+      "files": [
+        {
+          "path": "package.json",
+          "content": "{\n  \"scripts\": {\n    \"test\": \"vitest run\",\n    \"lint\": \"eslint .\"\n  }\n}\n"
+        },
+        {
+          "path": "README.md",
+          "content": "# Demo\n\n使用 npm test 运行测试。\n"
+        }
+      ]
     },
     {
       "id": 2,
       "prompt": "我们有一个 monorepo，包含 backend/、frontend/ 和 infra/。请更新 CLAUDE.md，让 agent 只加载相关上下文，但需要时能找到各包的专用规则。",
       "expected_output": "根 CLAUDE.md 作为导航层，路由到 backend、frontend、infra 的嵌套 CLAUDE.md 或 `.claude/rules/` 规则，而不是把所有细节嵌入根文件。",
-      "files": []
+      "files": [
+        {
+          "path": "backend/package.json",
+          "content": "{\n  \"scripts\": {\n    \"test\": \"pytest\"\n  }\n}\n"
+        },
+        {
+          "path": "frontend/package.json",
+          "content": "{\n  \"scripts\": {\n    \"test\": \"npm run test:unit\",\n    \"build\": \"vite build\"\n  }\n}\n"
+        },
+        {
+          "path": "infra/README.md",
+          "content": "# Infra\n\nTerraform modules live here.\n"
+        }
+      ]
     },
     {
       "id": 3,
       "prompt": "根据当前仓库刷新 CLAUDE.md 和 .claude/rules/ 中的规则文件。请保留已有警告，并同步更新相关规则文件。",
-      "expected_output": "保留已有指令，刷新 CLAUDE.md 和 .claude/rules/ 中的规则文件，确保内容与当前仓库配置一致。",
-      "files": []
+      "expected_output": "保留已有警告，刷新 CLAUDE.md 和 .claude/rules/ 中的规则文件，确保内容与当前仓库配置一致；修复或移除失效的 @ 导入。",
+      "files": [
+        {
+          "path": "CLAUDE.md",
+          "content": "# CLAUDE.md\n\n## 警告\n- 不要运行生产数据库迁移。\n\n@docs/missing-agent-notes.md\n\n## 命令\n- 测试：`npm test`\n"
+        },
+        {
+          "path": ".claude/rules/testing.md",
+          "content": "# 测试规则\n\n- 修改行为时更新测试。\n"
+        },
+        {
+          "path": "package.json",
+          "content": "{\n  \"scripts\": {\n    \"test\": \"pnpm test\",\n    \"typecheck\": \"tsc --noEmit\"\n  }\n}\n"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "这个 CLAUDE.md 太长了，里面混着 API、安全、前端和部署细节。请把它拆成按需加载的 .claude/rules 文件，并保持根文件简洁。",
+      "expected_output": "根 CLAUDE.md 保留导航和通用规则；API、安全、前端、部署等细节被拆入 `.claude/rules/`，能用 paths frontmatter 限定范围的规则应设置 paths。",
+      "files": [
+        {
+          "path": "CLAUDE.md",
+          "content": "# CLAUDE.md\n\n## API\n所有端点必须验证输入。\n\n## 前端\nReact 组件必须遵循现有样式。\n\n## 部署\n不要直接修改生产配置。\n\n## 安全\n不要记录密钥。\n"
+        },
+        {
+          "path": "src/api/users.ts",
+          "content": "export const users = []\n"
+        },
+        {
+          "path": "src/components/App.tsx",
+          "content": "export function App() { return null }\n"
+        }
+      ]
     }
   ]
 }

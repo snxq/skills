@@ -9,30 +9,45 @@ description: 在最近的两个 tag 之间生成结构化 changelog。当用户�
 
 ## 工作流程
 
-### 第 1 步：获取并识别 tag
+### 第 1 步：刷新并识别 tag
 
-执行以下命令：
+先尽量刷新远程 tag，但不要硬依赖 `origin`：
 
 ```bash
-git fetch --tags origin
+git remote get-url origin >/dev/null 2>&1 && git fetch --tags origin || true
 git tag --sort=-creatordate | head -2
 ```
 
-输出第一行是较新的 tag（记为 `NEW_TAG`），第二行是较旧的 tag（记为 `OLD_TAG`）。
+如果仓库没有 `origin`、远程名不同或 fetch 失败，继续使用本地 tag，并在最终输出中说明远程 tag 未刷新。不要因为没有 `origin` 就终止 changelog 生成。
 
-如果用户指定了特定的 tag，则使用用户指定的。如果用户只指定了一个 tag（如"生成 v1.4.3 的 changelog"），则按 `--sort=-creatordate` 排序找到该 tag 时间上紧邻的更早版本，作为 OLD_TAG。
+### 第 2 步：确定 tag 范围
 
-### 第 2 步：收集两个 tag 之间的所有提交
+根据用户输入确定 `OLD_TAG` 和 `NEW_TAG`：
+
+- 未指定 tag：使用 `git tag --sort=-creatordate | head -2`，第一行是 `NEW_TAG`，第二行是 `OLD_TAG`。
+- 指定单个 tag（如"生成 v1.4.3 的 changelog"）：该 tag 为 `NEW_TAG`，按 `--sort=-creatordate` 找到时间上紧邻的更早版本作为 `OLD_TAG`。
+- 指定两个 tag：支持 `OLD_TAG..NEW_TAG`、`OLD_TAG 到 NEW_TAG`、`从 OLD_TAG 到 NEW_TAG`、`比较 OLD_TAG 和 NEW_TAG` 等表达。把较旧/基准版本作为 `OLD_TAG`，较新/目标版本作为 `NEW_TAG`。
+- 如果两个 tag 的顺序与表达不一致或无法判断，按 tag 创建时间或提交拓扑推断；仍然模糊时询问用户确认，不要猜测。
+
+对用户指定的每个 tag，先验证它存在：
+
+```bash
+git rev-parse --verify --quiet TAG_NAME^{tag} || git rev-parse --verify --quiet TAG_NAME^{commit}
+```
+
+如果任一指定 tag 不存在，停止并告诉用户缺失的 tag。
+
+### 第 3 步：收集两个 tag 之间的所有提交
 
 ```bash
 git log OLD_TAG..NEW_TAG --format="%H %s" --no-merges
 ```
 
-`--no-merges` 过滤掉真正的 merge commit（多 parent）。但项目中 squash merge 的 PR 合入提交标题通常为 `Merge #xxx into master from branch`，它们只有一个 parent，`--no-merges` 无法过滤。这类提交需要保留并从 body 中提取实际变更描述。
+`--no-merges` 过滤掉真正的 merge commit（多 parent）。但项目中 squash merge 的 PR 合入提交标题通常匹配 `^Merge #\d+ into \S+`（例如合入 `main`、`master`、`develop` 或 release 分支），它们只有一个 parent，`--no-merges` 无法过滤。这类提交需要保留并从 body 中提取实际变更描述。
 
 如果过滤后没有任何提交，输出"两个 tag 之间没有实质性变更"并结束。
 
-### 第 3 步：必要时阅读提交详情
+### 第 4 步：必要时阅读提交详情
 
 如果某条提交的一行描述不够清晰，无法准确分类，需要查看该提交的具体改动来理解实际变更。
 
@@ -53,7 +68,7 @@ git log OLD_TAG..NEW_TAG --format="%H %s" --no-merges
    ```
    通过阅读实际代码变更来确定该提交的性质（新功能 / bug 修复 / 其他），从而准确分类。
 
-#### Squash Merge PR 提交（标题以 "Merge #xxx into master" 开头）
+#### Squash Merge PR 提交（标题匹配 `^Merge #\d+ into \S+`）
 
 这类提交的实际变更描述在 body 中，需要从 body 提取：
 
@@ -67,7 +82,7 @@ body 中通常包含：
 
 提取 body 第一行有意义的描述作为该提交的变更内容。如果 body 描述仍然模糊，再用 `git show --stat` 或 `git show` 深入了解。
 
-### 第 4 步：分类并生成 changelog
+### 第 5 步：分类并生成 changelog
 
 根据提交消息前缀和变更性质，将每条提交归入以下三个类别之一：
 
@@ -75,7 +90,7 @@ body 中通常包含：
 - **Bug fix**：以 `fix` 开头的提交，或修复缺陷、纠正异常行为、解决回归问题的变更
 - **Other**：其他所有变更 — 重构、文档、配置变更、测试、性能优化、依赖更新、杂项
 
-### 第 5 步：输出格式
+### 第 6 步：输出格式
 
 使用以下模板。语言与提交消息保持一致（提交是中文则输出中文，英文则输出英文）。
 

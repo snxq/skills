@@ -1,0 +1,41 @@
+{
+  "skill_name": "generate-changelog",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "生成最近两个 tag 之间的 changelog。",
+      "expected_output": "使用最近两个 tag 作为 OLD_TAG 和 NEW_TAG，收集 OLD_TAG..NEW_TAG 的提交，按 Feature / Bug fix / Other 分类输出。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "生成 v1.2.0..v1.3.0 的 release notes。",
+      "expected_output": "识别显式 OLD_TAG..NEW_TAG 范围，验证两个 tag 存在后使用 git log v1.2.0..v1.3.0 生成 changelog。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "生成单个 tag v1.4.3 的 changelog。",
+      "expected_output": "把用户指定的单个 tag v1.4.3 作为 NEW_TAG，并按 tag 时间找到紧邻的更早版本作为 OLD_TAG。",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "查看从 v2.0.0 到 v2.1.0 的改动，其中有一条提交标题是 Merge #123 into main from feature/foo。",
+      "expected_output": "把 squash merge 标题按 ^Merge #\\d+ into \\S+ 识别，不硬编码 master；读取提交 body 第一行作为实际变更描述。",
+      "files": []
+    },
+    {
+      "id": 5,
+      "prompt": "生成最近两个版本的 changelog，提交里有 fix、chore 和一些描述很模糊的提交，比如 'fix test'。",
+      "expected_output": "对模糊提交先查看 git show --stat，必要时查看 git show；无法补充出有意义描述的条目跳过。",
+      "files": []
+    },
+    {
+      "id": 6,
+      "prompt": "生成 v3.0.0..v3.0.1 的 changelog，但两个 tag 之间没有任何提交。",
+      "expected_output": "检测到空提交范围后输出“两个 tag 之间没有实质性变更”并结束，不显示空分类。",
+      "files": []
+    }
+  ]
+}

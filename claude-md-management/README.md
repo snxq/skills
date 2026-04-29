@@ -21,3 +21,8 @@ cp -r claude-md-management ~/.claude/skills/
 
 - `为这个仓库创建 CLAUDE.md`
 - `刷新 CLAUDE.md 和 .claude/rules/ 规则文件`
+- `审计这个仓库的 CLAUDE.md 是否过时`
+- `把很长的 CLAUDE.md 拆成 .claude/rules/ 规则文件`
+- `为 monorepo 的 backend/ 和 frontend/ 添加各自的 agent 指令`
+- `检查 CLAUDE.md 里的 @ 导入是否都有效`
+- `减少 agent 启动时加载的文档上下文`
