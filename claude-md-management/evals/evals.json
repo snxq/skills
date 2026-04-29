@@ -1,0 +1,23 @@
+{
+  "skill_name": "claude-md-management",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "为这个仓库创建 CLAUDE.md。保持简洁；如果需要详细说明，请创建 `.claude/rules/` 规则文件，不要把所有内容都塞进根文件。",
+      "expected_output": "生成简洁的根 CLAUDE.md，包含仓库级指导；如有必要，同时创建 `.claude/rules/` 规则文件，确保内容准确且不编造命令。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我们有一个 monorepo，包含 backend/、frontend/ 和 infra/。请更新 CLAUDE.md，让 agent 只加载相关上下文，但需要时能找到各包的专用规则。",
+      "expected_output": "根 CLAUDE.md 作为导航层，路由到 backend、frontend、infra 的嵌套 CLAUDE.md 或 `.claude/rules/` 规则，而不是把所有细节嵌入根文件。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "根据当前仓库刷新 CLAUDE.md 和 .claude/rules/ 中的规则文件。请保留已有警告，并同步更新相关规则文件。",
+      "expected_output": "保留已有指令，刷新 CLAUDE.md 和 .claude/rules/ 中的规则文件，确保内容与当前仓库配置一致。",
+      "files": []
+    }
+  ]
+}
