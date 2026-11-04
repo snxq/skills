@@ -7,6 +7,7 @@
 - [generate-changelog](generate-changelog/README.md) — 自动生成结构化的 Git 变更日志
 - [agent-md-management](agent-md-management/README.md) — 管理 AGENTS.md 指令文件与下级目录中的嵌套 AGENTS.md
 - [code-explain](code-explain/README.md) — 代码解读专家，帮助理解代码意图、流程与关键设计
+- [create-git-worktree](create-git-worktree/README.md) — 在仓库 .worktrees 下创建 worktree，按功能描述自动起名
 
 ## 安装
 
