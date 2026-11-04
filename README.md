@@ -5,7 +5,7 @@
 ## 包含的技能
 
 - [generate-changelog](generate-changelog/README.md) — 自动生成结构化的 Git 变更日志
-- [claude-md-management](claude-md-management/README.md) — 管理 CLAUDE.md 指令文件和 .claude/rules/ 规则文件
+- [agent-md-management](agent-md-management/README.md) — 管理 AGENTS.md 指令文件与下级目录中的嵌套 AGENTS.md
 - [code-explain](code-explain/README.md) — 代码解读专家，帮助理解代码意图、流程与关键设计
 
 ## 安装
@@ -18,5 +18,5 @@ cp -r */ ~/.claude/skills/
 
 # 或只安装单个技能
 cp -r generate-changelog ~/.claude/skills/
-cp -r claude-md-management ~/.claude/skills/
+cp -r agent-md-management ~/.claude/skills/
 ```
