@@ -17,7 +17,7 @@ cp -r generate-changelog ~/.claude/skills/
 
 ## 使用
 
-安装后，在 Claude Code 中直接用自然语言触发：
+安装后，直接用自然语言触发：
 
 - `生成 changelog`
 - `生成 v1.4.3 的 changelog`

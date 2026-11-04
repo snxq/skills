@@ -16,7 +16,7 @@ cp -r code-explain ~/.claude/skills/
 
 ## 使用
 
-安装后，在 Claude Code 中直接用自然语言触发：
+安装后，直接用自然语言触发：
 
 - `看懂这段代码`
 - `解释一下这段代码`

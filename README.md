@@ -1,6 +1,6 @@
 # skills
 
-Claude Code 自定义技能集合仓库。
+通用 Agent 自定义技能集合仓库。
 
 ## 包含的技能
 
@@ -10,7 +10,7 @@ Claude Code 自定义技能集合仓库。
 
 ## 安装
 
-将所需技能目录复制到 `~/.claude/skills/` 下即可：
+将所需技能目录复制到所用 Agent 的 skills 目录（如 Claude Code 的 `~/.claude/skills/`）下即可：
 
 ```bash
 # 安装全部技能
