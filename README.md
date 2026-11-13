@@ -8,6 +8,7 @@
 - [agent-md-management](agent-md-management/README.md) — 管理 AGENTS.md 指令文件与下级目录中的嵌套 AGENTS.md
 - [code-explain](code-explain/README.md) — 代码解读专家，帮助理解代码意图、流程与关键设计
 - [create-git-worktree](create-git-worktree/README.md) — 在仓库 .worktrees 下创建 worktree，按功能描述自动起名
+- [my-feature-dev](my-feature-dev/README.md) — 功能迭代多任务开发编排：文档依赖、阶段规划、worktree 并行子 Agent 与审查、基线 MR 管理
 
 ## 安装
 
